@@ -1,0 +1,153 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Como Ajudar — Recomeço Animal{% endblock %}
+
+{% block content %}
+
+<!-- HERO DA PÁGINA COMO AJUDAR -->
+<section class="py-5" style="background: linear-gradient(135deg, var(--secondary-color), var(--primary-color)); color: white;">
+    <div class="container text-center">
+        <span class="badge bg-white text-success px-3 py-2 rounded-pill fw-bold text-uppercase mb-3">Rede de Solidariedade</span>
+        <h1 class="display-4 fw-bold mb-3">Como Você Pode Fazer a Diferença</h1>
+        <p class="lead mx-auto mb-0" style="max-width: 750px; opacity: 0.95;">
+            Salvar uma vida não depende apenas do resgate: depende de uma grande corrente de amor. Conheça as 6 formas de fazer parte da nossa missão.
+        </p>
+    </div>
+</section>
+
+<!-- SEÇÃO DAS 6 FORMAS DE AJUDAR -->
+<section class="py-5">
+    <div class="container">
+        <div class="row g-4">
+            
+            <!-- 1. Adoção Responsável -->
+            <div class="col-lg-4 col-md-6">
+                <div class="step-card text-start p-4 h-100">
+                    <div class="brand-icon mb-3" style="width: 50px; height: 50px; font-size: 1.3rem;">
+                        <i class="fa-solid fa-heart"></i>
+                    </div>
+                    <h4 class="fw-bold text-dark mb-2">1. Adoção Responsável</h4>
+                    <p class="text-muted small mb-3">
+                        Abrir as portas da sua casa e o seu coração para um animal resgatado é o gesto mais nobre de amor. Você transforma uma história de dor em felicidade eterna.
+                    </p>
+                    <a href="{% url 'animais:catalogo' %}?modalidade=adocao" class="btn btn-primary-custom btn-sm">
+                        Quero Adotar <i class="fa-solid fa-arrow-right ms-1"></i>
+                    </a>
+                </div>
+            </div>
+
+            <!-- 2. Lar Temporário (LT) -->
+            <div class="col-lg-4 col-md-6">
+                <div class="step-card text-start p-4 h-100">
+                    <div class="brand-icon mb-3" style="width: 50px; height: 50px; font-size: 1.3rem; background: linear-gradient(135deg, var(--secondary-color), #2e7d32);">
+                        <i class="fa-solid fa-house-chimney-medical"></i>
+                    </div>
+                    <h4 class="fw-bold text-dark mb-2">2. Seja Lar Temporário</h4>
+                    <p class="text-muted small mb-3">
+                        Não pode adotar definitivamente? Ofereça abrigo seguro e aconchegante durante o período em que o animal realiza tratamentos pós-cirúrgicos ou aguarda um lar fixo.
+                    </p>
+                    <span class="badge bg-success-subtle text-success p-2 small">Fornecemos ração e suporte médico</span>
+                </div>
+            </div>
+
+            <!-- 3. Voluntariado -->
+            <div class="col-lg-4 col-md-6">
+                <div class="step-card text-start p-4 h-100">
+                    <div class="brand-icon mb-3" style="width: 50px; height: 50px; font-size: 1.3rem; background: linear-gradient(135deg, var(--brown-color), #5a4233);">
+                        <i class="fa-solid fa-people-carry-box"></i>
+                    </div>
+                    <h4 class="fw-bold text-dark mb-2">3. Seja Voluntário</h4>
+                    <p class="text-muted small mb-3">
+                        Dedique algumas horas do seu mês para auxiliar nos mutirões de banho, passeios com cães, higienização dos recintos, fotografia profissional ou eventos de triagem.
+                    </p>
+                    <span class="badge bg-secondary-subtle text-secondary p-2 small">Equipe unida e acolhedora</span>
+                </div>
+            </div>
+
+            <!-- 4. Divulgação de Animais -->
+            <div class="col-lg-4 col-md-6">
+                <div class="step-card text-start p-4 h-100">
+                    <div class="brand-icon mb-3" style="width: 50px; height: 50px; font-size: 1.3rem; background: linear-gradient(135deg, #0288d1, #01579b);">
+                        <i class="fa-solid fa-share-nodes"></i>
+                    </div>
+                    <h4 class="fw-bold text-dark mb-2">4. Compartilhe & Divulgue</h4>
+                    <p class="text-muted small mb-3">
+                        Um único clique seu nas redes sociais ou no grupo da família pode fazer a foto de um animal chegar à pessoa exata que estava procurando por ele. Divulgar salva vidas!
+                    </p>
+                    <div class="d-flex gap-2">
+                        <span class="badge bg-primary text-white">Instagram</span>
+                        <span class="badge bg-success text-white">WhatsApp</span>
+                        <span class="badge bg-info text-white">Facebook</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 5. Apoio Financeiro / Doações -->
+            <div class="col-lg-4 col-md-6">
+                <div class="step-card text-start p-4 h-100 border-success">
+                    <div class="brand-icon mb-3" style="width: 50px; height: 50px; font-size: 1.3rem; background: linear-gradient(135deg, #2e7d32, #1b5e20);">
+                        <i class="fa-solid fa-hand-holding-dollar"></i>
+                    </div>
+                    <h4 class="fw-bold text-dark mb-2">5. Apoio Financeiro (PIX)</h4>
+                    <p class="text-muted small mb-3">
+                        Custos com cirurgias ortopédicas, exames de sangue, vacinas importadas, feno para equinos e medicamentos contínuos são elevados. Qualquer valor fortalece nosso caixa de resgate.
+                    </p>
+                    <div class="p-2 bg-light rounded-2 border text-center small">
+                        <strong>Chave PIX (Fictícia ONG):</strong><br>
+                        <code>pix@recomecoanimal.org.br</code>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 6. Denúncia de Maus-Tratos -->
+            <div class="col-lg-4 col-md-6" id="denunciar">
+                <div class="step-card text-start p-4 h-100 border-danger">
+                    <div class="brand-icon mb-3" style="width: 50px; height: 50px; font-size: 1.3rem; background: linear-gradient(135deg, #d32f2f, #b71c1c);">
+                        <i class="fa-solid fa-bullhorn"></i>
+                    </div>
+                    <h4 class="fw-bold text-danger mb-2">6. Denuncie Maus-Tratos</h4>
+                    <p class="text-muted small mb-3">
+                        Quem cala consente. Se você testemunhar abandono, animais sem alimento/água, agressões físicas ou animais de tração extenuados, denuncie imediatamente às autoridades.
+                    </p>
+                    <div class="small fw-bold text-danger">
+                        <i class="fa-solid fa-phone me-1"></i> Disque 190 (Polícia) ou 181
+                    </div>
+                </div>
+            </div>
+
+        </div>
+
+        <!-- GUIA DETALHADO DE COMO DENUNCIAR -->
+        <div class="info-card-box mt-5 p-4 p-lg-5">
+            <h3 class="fw-bold text-dark mb-3"><i class="fa-solid fa-shield-halved text-danger me-2"></i> Passo a Passo para uma Denúncia Eficaz</h3>
+            <p class="text-muted">
+                Para que a polícia ambiental e as autoridades policiais possam lavrar o auto de infração e realizar o resgate cautelar com segurança jurídica, siga estas orientações:
+            </p>
+            <div class="row g-3">
+                <div class="col-md-4">
+                    <div class="p-3 bg-light rounded-3 h-100">
+                        <h6 class="fw-bold text-dark mb-2"><i class="fa-solid fa-camera text-primary me-2"></i> 1. Colete Evidências</h6>
+                        <p class="small text-muted mb-0">Fotografe ou filme o animal e o local de forma discreta, sem se colocar em risco de confronto com o agressor.</p>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="p-3 bg-light rounded-3 h-100">
+                        <h6 class="fw-bold text-dark mb-2"><i class="fa-solid fa-map-location-dot text-success me-2"></i> 2. Endereço Preciso</h6>
+                        <p class="small text-muted mb-0">Anote nome da rua, número exato, pontos de referência e detalhes sobre a visibilidade do animal no imóvel.</p>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="p-3 bg-light rounded-3 h-100">
+                        <h6 class="fw-bold text-dark mb-2"><i class="fa-solid fa-file-signature text-warning me-2"></i> 3. Boletim de Ocorrência</h6>
+                        <p class="small text-muted mb-0">Registre o Boletim de Ocorrência na Delegacia de Proteção ao Meio Ambiente (DPMA) ou delegacia eletrônica estadual.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+</section>
+
+{% endblock %}
+

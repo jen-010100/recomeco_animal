@@ -1,0 +1,115 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Cadastrar-se — Recomeço Animal{% endblock %}
+
+{% block content %}
+
+<div class="container py-5">
+    <div class="auth-container">
+        <div class="text-center mb-4">
+            <div class="brand-icon mx-auto mb-3" style="width: 50px; height: 50px; font-size: 1.4rem;">
+                <i class="fa-solid fa-user-plus"></i>
+            </div>
+            <h2 class="fw-bold text-dark mb-1">Crie sua Conta</h2>
+            <p class="text-muted small">
+                Faça parte da nossa rede de acolhimento e proteção aos animais resgatados.
+            </p>
+        </div>
+
+        {% if form.non_field_errors %}
+            <div class="alert alert-danger py-2 small">
+                {% for error in form.non_field_errors %}
+                    <p class="mb-0"><i class="fa-solid fa-triangle-exclamation me-1"></i> {{ error }}</p>
+                {% endfor %}
+            </div>
+        {% endif %}
+
+        <form method="post" novalidate>
+            {% csrf_token %}
+
+            <!-- Nome Completo -->
+            <div class="mb-3">
+                <label for="{{ form.nome_completo.id_for_label }}" class="form-label">
+                    {{ form.nome_completo.label }} <span class="text-danger">*</span>
+                </label>
+                {{ form.nome_completo }}
+                {% if form.nome_completo.errors %}
+                    <div class="text-danger small mt-1">{{ form.nome_completo.errors }}</div>
+                {% endif %}
+            </div>
+
+            <!-- E-mail -->
+            <div class="mb-3">
+                <label for="{{ form.email.id_for_label }}" class="form-label">
+                    {{ form.email.label }} <span class="text-danger">*</span>
+                </label>
+                {{ form.email }}
+                {% if form.email.errors %}
+                    <div class="text-danger small mt-1">{{ form.email.errors }}</div>
+                {% endif %}
+            </div>
+
+            <!-- Telefone / WhatsApp -->
+            <div class="mb-3">
+                <label for="{{ form.telefone.id_for_label }}" class="form-label">
+                    {{ form.telefone.label }} <span class="text-danger">*</span>
+                </label>
+                {{ form.telefone }}
+                {% if form.telefone.errors %}
+                    <div class="text-danger small mt-1">{{ form.telefone.errors }}</div>
+                {% endif %}
+            </div>
+
+            <!-- Nome de Usuário -->
+            <div class="mb-3">
+                <label for="{{ form.username.id_for_label }}" class="form-label">
+                    {{ form.username.label }} <span class="text-danger">*</span>
+                </label>
+                {{ form.username }}
+                <div class="form-text small text-muted">Apenas letras, números e @/./+/-/_</div>
+                {% if form.username.errors %}
+                    <div class="text-danger small mt-1">{{ form.username.errors }}</div>
+                {% endif %}
+            </div>
+
+            <div class="row g-2 mb-3">
+                <!-- Senha -->
+                <div class="col-md-6">
+                    <label for="{{ form.password.id_for_label }}" class="form-label">
+                        {{ form.password.label }} <span class="text-danger">*</span>
+                    </label>
+                    {{ form.password }}
+                    {% if form.password.errors %}
+                        <div class="text-danger small mt-1">{{ form.password.errors }}</div>
+                    {% endif %}
+                </div>
+
+                <!-- Confirmação de Senha -->
+                <div class="col-md-6">
+                    <label for="{{ form.password_confirm.id_for_label }}" class="form-label">
+                        {{ form.password_confirm.label }} <span class="text-danger">*</span>
+                    </label>
+                    {{ form.password_confirm }}
+                    {% if form.password_confirm.errors %}
+                        <div class="text-danger small mt-1">{{ form.password_confirm.errors }}</div>
+                    {% endif %}
+                </div>
+            </div>
+
+            <button type="submit" class="btn btn-primary-custom w-100 py-2 mt-3 justify-content-center">
+                <i class="fa-solid fa-check me-2"></i> Concluir Cadastro
+            </button>
+        </form>
+
+        <hr class="my-4">
+
+        <div class="text-center small">
+            <span class="text-muted">Já possui uma conta cadastrada?</span>
+            <a href="{% url 'usuarios:login' %}" class="fw-bold text-success text-decoration-none ms-1">Fazer Login</a>
+        </div>
+    </div>
+</div>
+
+{% endblock %}
+

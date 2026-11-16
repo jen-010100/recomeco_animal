@@ -1,0 +1,273 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}{{ animal.nome }} ({{ animal.get_especie_display }}) — Recomeço Animal{% endblock %}
+
+{% block content %}
+
+<!-- BREADCRUMB -->
+<section class="py-3" style="background-color: var(--beige-color); border-bottom: 1px solid var(--border-color);">
+    <div class="container">
+        <nav aria-label="breadcrumb">
+            <ol class="breadcrumb mb-0 small">
+                <li class="breadcrumb-item"><a href="{% url 'home' %}" class="text-decoration-none text-success">Início</a></li>
+                <li class="breadcrumb-item"><a href="{% url 'animais:catalogo' %}" class="text-decoration-none text-success">Animais</a></li>
+                <li class="breadcrumb-item active" aria-current="page">{{ animal.nome }}</li>
+            </ol>
+        </nav>
+    </div>
+</section>
+
+<!-- DETALHES DO ANIMAL -->
+<section class="py-5">
+    <div class="container">
+        <div class="row g-5">
+            
+            <!-- COLUNA DA ESQUERDA: GALERIA DE FOTOS -->
+            <div class="col-lg-6">
+                <div class="position-relative mb-3">
+                    {% if animal.imagem_principal %}
+                        <img id="mainAnimalImage" src="{{ animal.imagem_principal.url }}" alt="{{ animal.nome }}" class="animal-detail-img-main">
+                    {% else %}
+                        <img id="mainAnimalImage" src="https://images.unsplash.com/photo-1543466835-00a7907e9de1?auto=format&fit=crop&w=800&q=80" alt="{{ animal.nome }}" class="animal-detail-img-main">
+                    {% endif %}
+
+                    <!-- BADGES DE STATUS E MODALIDADE -->
+                    <span class="badge-modality {% if animal.modalidade == 'adocao' %}badge-adocao{% else %}badge-venda{% endif %} fs-6 py-2 px-3">
+                        {% if animal.modalidade == 'adocao' %}
+                            <i class="fa-solid fa-gift me-1"></i> Adoção Gratuita
+                        {% else %}
+                            <i class="fa-solid fa-coins me-1"></i> Venda Responsável por Valor Acessível
+                        {% endif %}
+                    </span>
+
+                    <span class="badge-status status-{{ animal.status }} fs-6 py-2 px-3">
+                        {{ animal.get_status_display }}
+                    </span>
+                </div>
+
+                <!-- MINIATURAS DA GALERIA -->
+                {% if imagens_extras %}
+                    <div class="d-flex flex-wrap gap-2 pt-2">
+                        {% if animal.imagem_principal %}
+                            <img src="{{ animal.imagem_principal.url }}" alt="Foto Principal" class="gallery-thumbnail active" data-full-img="{{ animal.imagem_principal.url }}">
+                        {% endif %}
+                        {% for img_extra in imagens_extras %}
+                            <img src="{{ img_extra.imagem.url }}" alt="{{ img_extra.legenda|default:'Foto adicional' }}" class="gallery-thumbnail" data-full-img="{{ img_extra.imagem.url }}" title="{{ img_extra.legenda }}">
+                        {% endfor %}
+                    </div>
+                {% endif %}
+
+                <!-- FICHA DE ESPECIFICAÇÕES RÁPIDAS -->
+                <div class="info-card-box mt-4">
+                    <h5 class="info-section-title"><i class="fa-solid fa-id-card text-success"></i> Ficha Técnica do Animal</h5>
+                    <div class="row g-2">
+                        <div class="col-6 col-sm-4">
+                            <div class="spec-item">
+                                <span class="spec-label">Espécie</span>
+                                <span class="spec-value">{{ animal.get_especie_display }}</span>
+                            </div>
+                        </div>
+                        <div class="col-6 col-sm-4">
+                            <div class="spec-item">
+                                <span class="spec-label">Raça / Mistura</span>
+                                <span class="spec-value">{{ animal.raca }}</span>
+                            </div>
+                        </div>
+                        <div class="col-6 col-sm-4">
+                            <div class="spec-item">
+                                <span class="spec-label">Sexo</span>
+                                <span class="spec-value">{{ animal.get_sexo_display }}</span>
+                            </div>
+                        </div>
+                        <div class="col-6 col-sm-4">
+                            <div class="spec-item">
+                                <span class="spec-label">Porte</span>
+                                <span class="spec-value">{{ animal.get_porte_display }}</span>
+                            </div>
+                        </div>
+                        <div class="col-6 col-sm-4">
+                            <div class="spec-item">
+                                <span class="spec-label">Idade Aproximada</span>
+                                <span class="spec-value">{{ animal.idade }}</span>
+                            </div>
+                        </div>
+                        <div class="col-6 col-sm-4">
+                            <div class="spec-item">
+                                <span class="spec-label">Localização</span>
+                                <span class="spec-value">{{ animal.localizacao }}</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- ALERTA DE LEGISLAÇÃO E BEM-ESTAR -->
+                <div class="p-3 bg-light rounded-3 border small text-muted">
+                    <i class="fa-solid fa-scale-balanced text-success me-2"></i>
+                    <strong>Observância Legal:</strong> Todos os animais são acolhidos em estrita conformidade com a legislação brasileira. Animais silvestres reabilitados possuem registro e destinação acompanhada pelos órgãos ambientais competentes.
+                </div>
+            </div>
+
+            <!-- COLUNA DA DIREITA: INFORMAÇÕES E BOTÃO DE AÇÃO -->
+            <div class="col-lg-6">
+                <div class="d-flex justify-content-between align-items-start mb-2">
+                    <h1 class="fw-bold text-dark display-5 mb-0">{{ animal.nome }}</h1>
+                </div>
+                <div class="text-muted mb-4 d-flex align-items-center gap-2">
+                    <span><i class="fa-solid fa-location-dot text-danger"></i> {{ animal.localizacao }}</span> &bull;
+                    <span>Cadastrado em {{ animal.data_cadastro|date:"d/m/Y" }}</span>
+                </div>
+
+                <!-- CAIXA DE DESTINAÇÃO / VALOR / SOLICITAÇÃO -->
+                <div class="info-card-box border-2 {% if animal.modalidade == 'adocao' %}border-success{% else %}border-warning{% endif %} mb-4" style="background: linear-gradient(to right, #FFFFFF, var(--light-green));">
+                    <div class="d-flex flex-wrap justify-content-between align-items-center">
+                        <div>
+                            {% if animal.modalidade == 'adocao' %}
+                                <span class="badge bg-success text-white px-3 py-1 rounded-pill fw-bold text-uppercase mb-1">
+                                    <i class="fa-solid fa-gift me-1"></i> Adoção Gratuita
+                                </span>
+                                <h3 class="fw-bold text-success mb-1">Adoção 100% Sem Custo</h3>
+                                <p class="small text-muted mb-0">Você só precisa oferecer um lar amoroso, seguro e responsável.</p>
+                            {% else %}
+                                <span class="badge bg-warning text-dark px-3 py-1 rounded-pill fw-bold text-uppercase mb-1">
+                                    <i class="fa-solid fa-horse me-1"></i> Venda Responsável por Valor Acessível
+                                </span>
+                                <h3 class="fw-bold text-dark mb-1">Contribuição: R$ {{ animal.valor }}</h3>
+                                <p class="small text-muted mb-0">Valor simbólico destinado ao ressarcimento de custos veterinários e garantia de tutela qualificada.</p>
+                            {% endif %}
+                        </div>
+                    </div>
+
+                    <hr class="my-3">
+
+                    <!-- BOTÃO CONDICIONAL -->
+                    <div>
+                        {% if animal.status == 'adotado' %}
+                            <div class="alert alert-info border-0 mb-0 d-flex align-items-center">
+                                <i class="fa-solid fa-circle-check fs-4 me-3 text-primary"></i>
+                                <div>
+                                    <strong>Final Feliz!</strong> Este animal já foi adotado/destinado e agora vive feliz com sua nova família.
+                                </div>
+                            </div>
+                            <button class="btn btn-secondary w-100 py-3 mt-3 rounded-pill fw-bold" disabled>
+                                <i class="fa-solid fa-lock me-2"></i> Animal já adotado / destinado
+                            </button>
+                        {% elif animal.status == 'reservado' %}
+                            <div class="alert alert-warning border-0 mb-0 d-flex align-items-center">
+                                <i class="fa-solid fa-clock fs-4 me-3 text-warning"></i>
+                                <div>
+                                    <strong>Processo em andamento!</strong> Este animal já se encontra em fase final de triagem e entrevistas com outro interessado.
+                                </div>
+                            </div>
+                            <button class="btn btn-secondary w-100 py-3 mt-3 rounded-pill fw-bold" disabled>
+                                <i class="fa-solid fa-lock me-2"></i> Animal temporariamente reservado
+                            </button>
+                        {% else %}
+                            <!-- Animal Disponível -->
+                            {% if solicitacao_existente %}
+                                <div class="alert alert-success border-0 mb-0 d-flex align-items-center">
+                                    <i class="fa-solid fa-circle-check fs-4 me-3 text-success"></i>
+                                    <div>
+                                        <strong>Você já enviou uma solicitação para este animal!</strong><br>
+                                        Status atual: <span class="badge bg-warning text-dark">{{ solicitacao_existente.get_status_display }}</span>.
+                                        Acompanhe na aba <a href="{% url 'usuarios:minha_conta' %}#solicitacoes" class="fw-bold text-success">Minha Conta</a>.
+                                    </div>
+                                </div>
+                            {% else %}
+                                {% if animal.modalidade == 'adocao' %}
+                                    <a href="{% url 'animais:solicitar_adocao' animal.pk %}" class="btn btn-primary-custom w-100 py-3 fs-5 justify-content-center">
+                                        <i class="fa-solid fa-heart me-2"></i> Quero Adotar
+                                    </a>
+                                {% else %}
+                                    <a href="{% url 'animais:solicitar_adocao' animal.pk %}" class="btn btn-accent-custom w-100 py-3 fs-5 justify-content-center">
+                                        <i class="fa-solid fa-handshake-simple me-2"></i> Tenho Interesse na Aquisição Responsável
+                                    </a>
+                                {% endif %}
+                                <p class="small text-muted text-center mt-2 mb-0">
+                                    <i class="fa-solid fa-shield-halved text-success me-1"></i> Processo com avaliação cuidadosa e termo de tutela responsável.
+                                </p>
+                            {% endif %}
+                        {% endif %}
+                    </div>
+                </div>
+
+                <!-- HISTÓRICO DE RESGATE E MAUS-TRATOS -->
+                <div class="info-card-box">
+                    <h5 class="info-section-title"><i class="fa-solid fa-shield-cat text-danger"></i> Histórico de Resgate e Maus-Tratos</h5>
+                    <p class="text-muted mb-0" style="white-space: pre-line;">{{ animal.historico_resgate }}</p>
+                </div>
+
+                <!-- DESCRIÇÃO COMPLETA -->
+                <div class="info-card-box">
+                    <h5 class="info-section-title"><i class="fa-solid fa-circle-info text-success"></i> Sobre o {{ animal.nome }}</h5>
+                    <p class="text-muted mb-0" style="white-space: pre-line;">{{ animal.descricao }}</p>
+                </div>
+
+                <!-- CONDIÇÕES DE SAÚDE -->
+                <div class="info-card-box">
+                    <h5 class="info-section-title"><i class="fa-solid fa-notes-medical text-primary"></i> Condições de Saúde e Vacinas</h5>
+                    <p class="text-muted mb-0" style="white-space: pre-line;">{{ animal.condicoes_saude }}</p>
+                </div>
+
+                <!-- NECESSIDADES ESPECIAIS (SE HOUVER) -->
+                {% if animal.necessidades_especiais %}
+                    <div class="info-card-box border-warning">
+                        <h5 class="info-section-title text-warning"><i class="fa-solid fa-triangle-exclamation"></i> Necessidades Especiais e Cuidados Contínuos</h5>
+                        <p class="text-muted mb-0" style="white-space: pre-line;">{{ animal.necessidades_especiais }}</p>
+                    </div>
+                {% endif %}
+
+                <!-- PERSONALIDADE E COMPORTAMENTO -->
+                {% if animal.personalidade %}
+                    <div class="info-card-box">
+                        <h5 class="info-section-title"><i class="fa-solid fa-face-smile text-warning"></i> Personalidade e Convivência</h5>
+                        <p class="text-muted mb-0" style="white-space: pre-line;">{{ animal.personalidade }}</p>
+                    </div>
+                {% endif %}
+
+            </div>
+        </div>
+
+        <!-- VEJA TAMBÉM OUTROS ANIMAIS -->
+        {% if outros_animais %}
+            <div class="mt-5 pt-5 border-top">
+                <div class="d-flex justify-content-between align-items-center mb-4">
+                    <h3 class="fw-bold text-dark mb-0">Conheça Também Outros Amigos</h3>
+                    <a href="{% url 'animais:catalogo' %}" class="btn btn-outline-custom btn-sm">Ver todos</a>
+                </div>
+                <div class="row g-4">
+                    {% for outro in outros_animais %}
+                        <div class="col-md-4">
+                            <div class="animal-card">
+                                <div class="animal-card-img-wrapper" style="padding-top: 60%;">
+                                    {% if outro.imagem_principal %}
+                                        <img src="{{ outro.imagem_principal.url }}" alt="{{ outro.nome }}" class="animal-card-img">
+                                    {% else %}
+                                        <img src="https://images.unsplash.com/photo-1543466835-00a7907e9de1?auto=format&fit=crop&w=500&q=80" alt="{{ outro.nome }}" class="animal-card-img">
+                                    {% endif %}
+                                    <span class="badge-modality {% if outro.modalidade == 'adocao' %}badge-adocao{% else %}badge-venda{% endif %}">
+                                        {{ outro.get_modalidade_display }}
+                                    </span>
+                                </div>
+                                <div class="animal-card-body">
+                                    <h4 class="animal-card-title">{{ outro.nome }}</h4>
+                                    <div class="animal-card-meta">
+                                        <span>{{ outro.get_especie_display }} &bull; {{ outro.raca }}</span>
+                                    </div>
+                                    <div class="animal-card-footer">
+                                        <span class="small text-muted"><i class="fa-solid fa-location-dot text-danger"></i> {{ outro.localizacao }}</span>
+                                        <a href="{% url 'animais:detalhe_animal' outro.pk %}" class="btn btn-primary-custom btn-sm">Ver</a>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    {% endfor %}
+                </div>
+            </div>
+        {% endif %}
+
+    </div>
+</section>
+
+{% endblock %}
+

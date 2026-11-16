@@ -1,0 +1,174 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}
+    {% if animal.modalidade == 'adocao' %}
+        Solicitar Adoção de {{ animal.nome }}
+    {% else %}
+        Demonstrar Interesse em {{ animal.nome }}
+    {% endif %}
+    — Recomeço Animal
+{% endblock %}
+
+{% block content %}
+
+<section class="py-4" style="background-color: var(--beige-color); border-bottom: 1px solid var(--border-color);">
+    <div class="container">
+        <nav aria-label="breadcrumb">
+            <ol class="breadcrumb mb-2 small">
+                <li class="breadcrumb-item"><a href="{% url 'home' %}" class="text-decoration-none text-success">Início</a></li>
+                <li class="breadcrumb-item"><a href="{% url 'animais:catalogo' %}" class="text-decoration-none text-success">Animais</a></li>
+                <li class="breadcrumb-item"><a href="{% url 'animais:detalhe_animal' animal.pk %}" class="text-decoration-none text-success">{{ animal.nome }}</a></li>
+                <li class="breadcrumb-item active" aria-current="page">Solicitação</li>
+            </ol>
+        </nav>
+        <h1 class="fw-bold text-dark mb-0">
+            {% if animal.modalidade == 'adocao' %}
+                <i class="fa-solid fa-heart text-danger me-2"></i> Solicitação de Adoção Gratuita
+            {% else %}
+                <i class="fa-solid fa-handshake-simple text-warning me-2"></i> Interesse em Aquisição Responsável
+            {% endif %}
+        </h1>
+    </div>
+</section>
+
+<section class="py-5">
+    <div class="container">
+        <div class="row g-5">
+            
+            <!-- RESUMO DO ANIMAL -->
+            <div class="col-lg-4">
+                <div class="info-card-box sticky-top" style="top: 90px;">
+                    <h5 class="fw-bold text-dark mb-3"><i class="fa-solid fa-paw text-success me-2"></i> Animal Escolhido</h5>
+                    
+                    <div class="rounded-3 overflow-hidden mb-3">
+                        {% if animal.imagem_principal %}
+                            <img src="{{ animal.imagem_principal.url }}" alt="{{ animal.nome }}" class="w-100" style="height: 200px; object-fit: cover;">
+                        {% else %}
+                            <img src="https://images.unsplash.com/photo-1543466835-00a7907e9de1?auto=format&fit=crop&w=500&q=80" alt="{{ animal.nome }}" class="w-100" style="height: 200px; object-fit: cover;">
+                        {% endif %}
+                    </div>
+
+                    <h4 class="fw-bold text-dark mb-1">{{ animal.nome }}</h4>
+                    <p class="small text-muted mb-3">{{ animal.get_especie_display }} &bull; {{ animal.raca }}</p>
+
+                    <div class="p-3 bg-light rounded-3 mb-3 small">
+                        <div class="d-flex justify-content-between mb-1">
+                            <span class="text-muted">Modalidade:</span>
+                            <strong>{{ animal.get_modalidade_display }}</strong>
+                        </div>
+                        {% if animal.modalidade == 'venda' and animal.valor > 0 %}
+                            <div class="d-flex justify-content-between mb-1">
+                                <span class="text-muted">Contribuição:</span>
+                                <strong class="text-brown">R$ {{ animal.valor }}</strong>
+                            </div>
+                        {% endif %}
+                        <div class="d-flex justify-content-between mb-1">
+                            <span class="text-muted">Porte:</span>
+                            <strong>{{ animal.get_porte_display }}</strong>
+                        </div>
+                        <div class="d-flex justify-content-between mb-1">
+                            <span class="text-muted">Idade:</span>
+                            <strong>{{ animal.idade }}</strong>
+                        </div>
+                        <div class="d-flex justify-content-between">
+                            <span class="text-muted">Localização:</span>
+                            <strong>{{ animal.localizacao }}</strong>
+                        </div>
+                    </div>
+
+                    <a href="{% url 'animais:detalhe_animal' animal.pk %}" class="btn btn-outline-custom btn-sm w-100">
+                        <i class="fa-solid fa-arrow-left me-1"></i> Voltar à página do animal
+                    </a>
+                </div>
+            </div>
+
+            <!-- FORMULÁRIO DE SOLICITAÇÃO -->
+            <div class="col-lg-8">
+                <div class="info-card-box">
+                    <h3 class="fw-bold text-dark mb-2">Formulário de Triagem e Interesse</h3>
+                    <p class="text-muted mb-4">
+                        Por favor, responda com sinceridade e detalhes às perguntas abaixo. Todas as informações nos ajudam a avaliar se a rotina e o ambiente são adequados às necessidades específicas do(a) <strong>{{ animal.nome }}</strong>.
+                    </p>
+
+                    {% if form.non_field_errors %}
+                        <div class="alert alert-danger">
+                            {% for error in form.non_field_errors %}
+                                <p class="mb-0"><i class="fa-solid fa-triangle-exclamation me-2"></i> {{ error }}</p>
+                            {% endfor %}
+                        </div>
+                    {% endif %}
+
+                    <form method="post" novalidate>
+                        {% csrf_token %}
+
+                        <!-- Justificativa -->
+                        <div class="mb-4">
+                            <label for="{{ form.justificativa.id_for_label }}" class="form-label fw-bold">
+                                {{ form.justificativa.label }} <span class="text-danger">*</span>
+                            </label>
+                            {{ form.justificativa }}
+                            <div class="form-text small text-muted">{{ form.justificativa.help_text }}</div>
+                            {% if form.justificativa.errors %}
+                                <div class="text-danger small mt-1">{{ form.justificativa.errors }}</div>
+                            {% endif %}
+                        </div>
+
+                        <!-- Experiência com Animais -->
+                        <div class="mb-4">
+                            <label for="{{ form.experiencia_animais.id_for_label }}" class="form-label fw-bold">
+                                {{ form.experiencia_animais.label }} <span class="text-danger">*</span>
+                            </label>
+                            {{ form.experiencia_animais }}
+                            <div class="form-text small text-muted">{{ form.experiencia_animais.help_text }}</div>
+                            {% if form.experiencia_animais.errors %}
+                                <div class="text-danger small mt-1">{{ form.experiencia_animais.errors }}</div>
+                            {% endif %}
+                        </div>
+
+                        <!-- Condições de Moradia -->
+                        <div class="mb-4">
+                            <label for="{{ form.condicoes_moradia.id_for_label }}" class="form-label fw-bold">
+                                {{ form.condicoes_moradia.label }} <span class="text-danger">*</span>
+                            </label>
+                            {{ form.condicoes_moradia }}
+                            <div class="form-text small text-muted">{{ form.condicoes_moradia.help_text }}</div>
+                            {% if form.condicoes_moradia.errors %}
+                                <div class="text-danger small mt-1">{{ form.condicoes_moradia.errors }}</div>
+                            {% endif %}
+                        </div>
+
+                        <!-- Termo de Tutela Responsável -->
+                        <div class="p-3 bg-light rounded-3 border mb-4">
+                            <div class="form-check">
+                                {{ form.termo_responsabilidade }}
+                                <label class="form-check-label fw-bold small text-dark ms-2" for="{{ form.termo_responsabilidade.id_for_label }}">
+                                    {{ form.termo_responsabilidade.label }} <span class="text-danger">*</span>
+                                </label>
+                            </div>
+                            <p class="small text-muted mb-0 mt-2 ps-4">
+                                {{ form.termo_responsabilidade.help_text }}
+                            </p>
+                            {% if form.termo_responsabilidade.errors %}
+                                <div class="text-danger small mt-2 ps-4">{{ form.termo_responsabilidade.errors }}</div>
+                            {% endif %}
+                        </div>
+
+                        <div class="d-flex flex-wrap gap-3">
+                            <button type="submit" class="btn btn-primary-custom px-4 py-2 fs-6">
+                                <i class="fa-solid fa-paper-plane me-2"></i> Enviar Solicitação
+                            </button>
+                            <a href="{% url 'animais:detalhe_animal' animal.pk %}" class="btn btn-outline-secondary rounded-pill px-4 py-2">
+                                Cancelar
+                            </a>
+                        </div>
+                    </form>
+                </div>
+            </div>
+
+        </div>
+    </div>
+</section>
+
+{% endblock %}
+

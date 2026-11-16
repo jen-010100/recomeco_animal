@@ -1,0 +1,120 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Sobre Nós — Recomeço Animal{% endblock %}
+
+{% block content %}
+
+<!-- HERO DA PÁGINA SOBRE NÓS -->
+<section class="py-5" style="background: linear-gradient(135deg, var(--primary-color), var(--secondary-color)); color: white;">
+    <div class="container text-center">
+        <span class="badge bg-white text-success px-3 py-2 rounded-pill fw-bold text-uppercase mb-3">Nossa Identidade & Valores</span>
+        <h1 class="display-4 fw-bold mb-3">Por Trás do Recomeço Animal</h1>
+        <p class="lead mx-auto mb-0" style="max-width: 750px; opacity: 0.95;">
+            "Todo animal merece uma segunda chance." Nascemos do inconformismo contra a crueldade e da certeza de que o amor e a responsabilidade transformam destinos.
+        </p>
+    </div>
+</section>
+
+<!-- CONTEÚDO PRINCIPAL -->
+<section class="py-5">
+    <div class="container">
+        <div class="row align-items-center g-5 mb-5">
+            <div class="col-lg-6">
+                <span class="badge bg-success-subtle text-success px-3 py-1 rounded-pill fw-bold text-uppercase mb-2">Quem Somos</span>
+                <h2 class="fw-bold text-dark mb-3">Conectando Histórias Que Foram Feridas a Lares Que Sabem Amar</h2>
+                <p class="text-muted">
+                    A plataforma <strong>Recomeço Animal</strong> foi desenvolvida com o objetivo humanitário de atuar na ponta do resgate, estabilização clínica, reabilitação física/emocional e encaminhamento responsável de animais vítimas de negligência, abandono e maus-tratos.
+                </p>
+                <p class="text-muted">
+                    Diferente de sistemas convencionais de comércio, nossa finalidade primordial é a <strong>proteção integral da vida animal</strong>. Cada ficha técnica cadastrada reflete um processo transparente com exames veterinários, vacinação, vermifugação e acompanhamento comportamental.
+                </p>
+            </div>
+            <div class="col-lg-6">
+                <img src="https://images.unsplash.com/photo-1548199973-03cce0bbc87b?auto=format&fit=crop&w=700&q=80" alt="Resgate e acolhimento" class="img-fluid rounded-4 shadow-md">
+            </div>
+        </div>
+
+        <!-- PILARES DE ATUAÇÃO -->
+        <div class="row g-4 mb-5">
+            <div class="col-md-4">
+                <div class="info-card-box h-100 text-center p-4">
+                    <div class="brand-icon mx-auto mb-3" style="width: 55px; height: 55px; font-size: 1.4rem;">
+                        <i class="fa-solid fa-bullseye"></i>
+                    </div>
+                    <h4 class="fw-bold text-dark mb-2">Nossa Missão</h4>
+                    <p class="text-muted small mb-0">
+                        Resgatar, acolher com dignidade e viabilizar a transição segura de animais em sofrimento para famílias comprometidas com o respeito à vida.
+                    </p>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="info-card-box h-100 text-center p-4">
+                    <div class="brand-icon mx-auto mb-3" style="width: 55px; height: 55px; font-size: 1.4rem; background: linear-gradient(135deg, var(--secondary-color), var(--brown-color));">
+                        <i class="fa-solid fa-eye"></i>
+                    </div>
+                    <h4 class="fw-bold text-dark mb-2">Nossa Visão</h4>
+                    <p class="text-muted small mb-0">
+                        Ser referência nacional em transparência, triagem ética e combate ativo aos maus-tratos, unindo tecnologia de ponta e engajamento comunitário.
+                    </p>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="info-card-box h-100 text-center p-4">
+                    <div class="brand-icon mx-auto mb-3" style="width: 55px; height: 55px; font-size: 1.4rem; background: linear-gradient(135deg, var(--brown-color), var(--primary-color));">
+                        <i class="fa-solid fa-handshake-angle"></i>
+                    </div>
+                    <h4 class="fw-bold text-dark mb-2">Nossos Valores</h4>
+                    <p class="text-muted small mb-0">
+                        Empatia com a dor animal, rigor técnico sanitário, responsabilidade jurídica, combate à exploração e verdade em cada anúncio.
+                    </p>
+                </div>
+            </div>
+        </div>
+
+        <!-- SEÇÃO ESPECIAL EQUINOS E LEGISLAÇÃO -->
+        <div id="equinos" class="info-card-box p-4 p-lg-5 mb-5 border-start border-4 border-success">
+            <h3 class="fw-bold text-dark mb-3"><i class="fa-solid fa-horse text-success me-2"></i> Nossa Política para Cavalos e Animais de Grande Porte</h3>
+            <p class="text-muted">
+                A destinação de equinos resgatados de tração exaustiva ou abandono requer cuidados altamente especializados. Ao contrário de cães e gatos, cavalos necessitam de pastagens adequadas, piquetes, alimentação volumosa específica, ferrageamento contínuo e acompanhamento veterinário equino de alto custo.
+            </p>
+            <p class="text-muted">
+                Por isso, a plataforma estabelece uma <strong>modalidade de venda responsável com contribuição acessível</strong>:
+            </p>
+            <div class="row g-3 mt-1">
+                <div class="col-md-6">
+                    <div class="p-3 bg-light rounded-3">
+                        <h6 class="fw-bold text-dark mb-1"><i class="fa-solid fa-check text-success me-2"></i> Valor Subordinado ao Propósito Social</h6>
+                        <p class="small text-muted mb-0">
+                            Os valores cobrados são meramente simbólicos ou para amortizar despesas médicas intensivas, situando-se muito abaixo do mercado tradicional.
+                        </p>
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="p-3 bg-light rounded-3">
+                        <h6 class="fw-bold text-dark mb-1"><i class="fa-solid fa-check text-success me-2"></i> Vistoria de Espaço Físico</h6>
+                        <p class="small text-muted mb-0">
+                            Exigimos a comprovação de sítio, haras, hípica ou fazenda com pastagem segura antes da homologação de qualquer transferência.
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- SEÇÃO ANIMAIS SILVESTRES E LEGALIDADE AMBIENTAL -->
+        <div class="info-card-box p-4 p-lg-5 bg-light border-0">
+            <h3 class="fw-bold text-dark mb-3"><i class="fa-solid fa-feather text-primary me-2"></i> Legalidade e Fauna Silvestre Reabilitada</h3>
+            <p class="text-muted">
+                Em estrito cumprimento à <strong>Lei de Crimes Ambientais (Lei Federal nº 9.605/1998)</strong> e às instruções normativas do IBAMA e dos órgãos estaduais de meio ambiente:
+            </p>
+            <ul class="text-muted small ps-3 mb-0">
+                <li class="mb-2">É terminantemente proibido qualquer comércio ou transferência ilegal de espécies da fauna silvestre brasileira.</li>
+                <li class="mb-2">Espécies silvestres ou exóticas mantidas pela instituição (como pássaros reabilitados de gaiolas irregulares) são disponibilizadas estritamente como guarda assistida ou destinação autorizada pelo órgão ambiental.</li>
+                <li>Nenhum animal sem procedência legal ou que não possa ser legalmente mantido sob tutela doméstica é anunciado na plataforma.</li>
+            </ul>
+        </div>
+    </div>
+</section>
+
+{% endblock %}
+

@@ -1,0 +1,272 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Conheça os Animais — Recomeço Animal{% endblock %}
+
+{% block content %}
+
+<!-- CABEÇALHO DA PÁGINA -->
+<section class="py-4" style="background-color: var(--beige-color); border-bottom: 1px solid var(--border-color);">
+    <div class="container">
+        <div class="row align-items-center">
+            <div class="col-lg-8">
+                <nav aria-label="breadcrumb">
+                    <ol class="breadcrumb mb-2 small">
+                        <li class="breadcrumb-item"><a href="{% url 'home' %}" class="text-decoration-none text-success">Início</a></li>
+                        <li class="breadcrumb-item active" aria-current="page">Animais Resgatados</li>
+                    </ol>
+                </nav>
+                <h1 class="fw-bold text-dark mb-1">Animais Disponíveis para Adoção e Destinação</h1>
+                <p class="text-muted mb-0">Cada olhar carrega uma história de superação e a esperança de um recomeço com amor.</p>
+            </div>
+            <div class="col-lg-4 text-lg-end mt-3 mt-lg-0">
+                <span class="badge bg-success-subtle text-success fs-6 px-3 py-2 rounded-pill">
+                    <i class="fa-solid fa-paw me-1"></i> {{ page_obj.paginator.count }} amigos cadastrados
+                </span>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- ÁREA PRINCIPAL: FILTROS + CATÁLOGO -->
+<section class="py-5">
+    <div class="container">
+        <div class="row g-4">
+            
+            <!-- BARRA LATERAL DE FILTROS -->
+            <div class="col-lg-3">
+                <div class="info-card-box p-3 sticky-top" style="top: 90px; z-index: 10;">
+                    <div class="d-flex justify-content-between align-items-center mb-3 pb-2 border-bottom">
+                        <h5 class="fw-bold text-dark mb-0"><i class="fa-solid fa-filter text-success me-2"></i> Filtros</h5>
+                        <a href="{% url 'animais:catalogo' %}" class="small text-danger text-decoration-none fw-semibold">
+                            <i class="fa-solid fa-rotate-left"></i> Limpar
+                        </a>
+                    </div>
+
+                    <form method="get" action="{% url 'animais:catalogo' %}" id="filterForm">
+                        <!-- Busca Textual -->
+                        <div class="mb-3">
+                            <label class="form-label small fw-bold">Busca por palavra-chave</label>
+                            <div class="input-group">
+                                <input type="text" name="q" class="form-control form-control-sm" placeholder="Nome, raça ou espécie..." value="{{ filtro_atual.q }}">
+                                <button class="btn btn-outline-secondary btn-sm" type="submit">
+                                    <i class="fa-solid fa-search"></i>
+                                </button>
+                            </div>
+                        </div>
+
+                        <!-- Espécie -->
+                        <div class="mb-3">
+                            <label class="form-label small fw-bold">Espécie</label>
+                            <select name="especie" class="form-select form-select-sm" onchange="this.form.submit()">
+                                <option value="">Todas as espécies</option>
+                                {% for val, label in especies_disponiveis %}
+                                    <option value="{{ val }}" {% if filtro_atual.especie == val %}selected{% endif %}>{{ label }}</option>
+                                {% endfor %}
+                            </select>
+                        </div>
+
+                        <!-- Modalidade -->
+                        <div class="mb-3">
+                            <label class="form-label small fw-bold">Modalidade</label>
+                            <select name="modalidade" class="form-select form-select-sm" onchange="this.form.submit()">
+                                <option value="">Todas as modalidades</option>
+                                {% for val, label in modalidades_disponiveis %}
+                                    <option value="{{ val }}" {% if filtro_atual.modalidade == val %}selected{% endif %}>{{ label }}</option>
+                                {% endfor %}
+                            </select>
+                        </div>
+
+                        <!-- Porte -->
+                        <div class="mb-3">
+                            <label class="form-label small fw-bold">Porte</label>
+                            <select name="porte" class="form-select form-select-sm" onchange="this.form.submit()">
+                                <option value="">Todos os portes</option>
+                                {% for val, label in portes_disponiveis %}
+                                    <option value="{{ val }}" {% if filtro_atual.porte == val %}selected{% endif %}>{{ label }}</option>
+                                {% endfor %}
+                            </select>
+                        </div>
+
+                        <!-- Sexo -->
+                        <div class="mb-3">
+                            <label class="form-label small fw-bold">Sexo</label>
+                            <select name="sexo" class="form-select form-select-sm" onchange="this.form.submit()">
+                                <option value="">Ambos os sexos</option>
+                                {% for val, label in sexos_disponiveis %}
+                                    <option value="{{ val }}" {% if filtro_atual.sexo == val %}selected{% endif %}>{{ label }}</option>
+                                {% endfor %}
+                            </select>
+                        </div>
+
+                        <!-- Disponibilidade / Status -->
+                        <div class="mb-3">
+                            <label class="form-label small fw-bold">Disponibilidade</label>
+                            <select name="status" class="form-select form-select-sm" onchange="this.form.submit()">
+                                <option value="">Todas as situações</option>
+                                {% for val, label in status_disponiveis %}
+                                    <option value="{{ val }}" {% if filtro_atual.status == val %}selected{% endif %}>{{ label }}</option>
+                                {% endfor %}
+                            </select>
+                        </div>
+
+                        <!-- Localização -->
+                        <div class="mb-3">
+                            <label class="form-label small fw-bold">Localização (Cidade/UF)</label>
+                            <input type="text" name="localizacao" class="form-control form-control-sm" placeholder="Ex: Curitiba, SP, PR..." value="{{ filtro_atual.localizacao }}">
+                        </div>
+
+                        <button type="submit" class="btn btn-primary-custom btn-sm w-100 mt-2">
+                            <i class="fa-solid fa-filter me-1"></i> Aplicar Filtros
+                        </button>
+                    </form>
+                </div>
+            </div>
+
+            <!-- GRADE DE CARDS DOS ANIMAIS -->
+            <div class="col-lg-9">
+                <!-- Filtros Ativos (Pills) -->
+                {% if filtro_atual.q or filtro_atual.especie or filtro_atual.modalidade or filtro_atual.porte or filtro_atual.sexo or filtro_atual.status or filtro_atual.localizacao or filtro_atual.grande_porte %}
+                    <div class="d-flex flex-wrap align-items-center gap-2 mb-4 p-3 bg-white rounded-3 border">
+                        <span class="small fw-bold text-muted"><i class="fa-solid fa-tags me-1"></i> Filtros ativos:</span>
+                        {% if filtro_atual.q %}
+                            <span class="badge bg-secondary">Busca: "{{ filtro_atual.q }}"</span>
+                        {% endif %}
+                        {% if filtro_atual.especie %}
+                            <span class="badge bg-success">Espécie: {{ filtro_atual.especie }}</span>
+                        {% endif %}
+                        {% if filtro_atual.modalidade %}
+                            <span class="badge bg-success">Modalidade: {{ filtro_atual.modalidade }}</span>
+                        {% endif %}
+                        {% if filtro_atual.porte %}
+                            <span class="badge bg-info">Porte: {{ filtro_atual.porte }}</span>
+                        {% endif %}
+                        {% if filtro_atual.status %}
+                            <span class="badge bg-warning text-dark">Status: {{ filtro_atual.status }}</span>
+                        {% endif %}
+                        {% if filtro_atual.grande_porte %}
+                            <span class="badge bg-dark">Grande Porte / Cavalos</span>
+                        {% endif %}
+                        <a href="{% url 'animais:catalogo' %}" class="small text-danger ms-auto text-decoration-none">Remover todos</a>
+                    </div>
+                {% endif %}
+
+                <div class="row g-4">
+                    {% for animal in animais %}
+                        <div class="col-md-6 col-xl-4">
+                            <div class="animal-card">
+                                <div class="animal-card-img-wrapper">
+                                    {% if animal.imagem_principal %}
+                                        <img src="{{ animal.imagem_principal.url }}" alt="{{ animal.nome }}" class="animal-card-img">
+                                    {% else %}
+                                        <img src="https://images.unsplash.com/photo-1543466835-00a7907e9de1?auto=format&fit=crop&w=500&q=80" alt="{{ animal.nome }}" class="animal-card-img">
+                                    {% endif %}
+                                    
+                                    <span class="badge-modality {% if animal.modalidade == 'adocao' %}badge-adocao{% else %}badge-venda{% endif %}">
+                                        {% if animal.modalidade == 'adocao' %}
+                                            <i class="fa-solid fa-gift me-1"></i> Adoção
+                                        {% else %}
+                                            <i class="fa-solid fa-coins me-1"></i> Valor Acessível
+                                        {% endif %}
+                                    </span>
+
+                                    <span class="badge-status status-{{ animal.status }}">
+                                        {{ animal.get_status_display }}
+                                    </span>
+                                </div>
+
+                                <div class="animal-card-body">
+                                    <h3 class="animal-card-title">{{ animal.nome }}</h3>
+                                    <div class="animal-card-meta">
+                                        <span><i class="fa-solid fa-dna text-success"></i> {{ animal.raca }}</span>
+                                    </div>
+
+                                    <div class="animal-pill-group">
+                                        <span class="animal-pill"><i class="fa-solid fa-paw"></i> {{ animal.get_especie_display }}</span>
+                                        <span class="animal-pill"><i class="fa-solid fa-calendar"></i> {{ animal.idade }}</span>
+                                        <span class="animal-pill"><i class="fa-solid fa-venus-mars"></i> {{ animal.get_sexo_display }}</span>
+                                    </div>
+
+                                    <div class="small text-muted mb-2">
+                                        <i class="fa-solid fa-location-dot text-danger me-1"></i> {{ animal.localizacao }}
+                                    </div>
+
+                                    <p class="animal-card-desc">{{ animal.descricao }}</p>
+
+                                    <div class="animal-card-footer">
+                                        <div>
+                                            {% if animal.modalidade == 'venda' and animal.valor > 0 %}
+                                                <div class="small text-muted">Contribuição:</div>
+                                                <div class="animal-price">R$ {{ animal.valor }}</div>
+                                            {% else %}
+                                                <div class="small text-muted">Adoção:</div>
+                                                <span class="badge bg-success-subtle text-success fw-bold">Gratuita</span>
+                                            {% endif %}
+                                        </div>
+                                        <a href="{% url 'animais:detalhe_animal' animal.pk %}" class="btn btn-primary-custom btn-sm">
+                                            Conhecer animal <i class="fa-solid fa-chevron-right"></i>
+                                        </a>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    {% empty %}
+                        <div class="col-12 text-center py-5">
+                            <div class="py-5 bg-white rounded-4 border">
+                                <i class="fa-solid fa-magnifying-glass text-muted fs-1 mb-3"></i>
+                                <h4 class="fw-bold text-dark">Nenhum animal encontrado</h4>
+                                <p class="text-muted mx-auto" style="max-width: 500px;">
+                                    Não encontramos nenhum animal que corresponda aos filtros selecionados. Tente alterar ou limpar os filtros para ver mais companheiros.
+                                </p>
+                                <a href="{% url 'animais:catalogo' %}" class="btn btn-primary-custom mt-2">
+                                    <i class="fa-solid fa-rotate-left me-1"></i> Limpar Filtros
+                                </a>
+                            </div>
+                        </div>
+                    {% endfor %}
+                </div>
+
+                <!-- PAGINAÇÃO FUNCIONAL -->
+                {% if is_paginated %}
+                    <nav aria-label="Navegação de páginas" class="mt-5">
+                        <ul class="pagination justify-content-center">
+                            {% if page_obj.has_previous %}
+                                <li class="page-item">
+                                    <a class="page-link text-success" href="?page={{ page_obj.previous_page_number }}{% if query_string %}&{{ query_string }}{% endif %}">
+                                        <i class="fa-solid fa-chevron-left me-1"></i> Anterior
+                                    </a>
+                                </li>
+                            {% else %}
+                                <li class="page-item disabled"><span class="page-link">Anterior</span></li>
+                            {% endif %}
+
+                            {% for num in paginator.page_range %}
+                                {% if page_obj.number == num %}
+                                    <li class="page-item active"><span class="page-link bg-success border-success">{{ num }}</span></li>
+                                {% elif num > page_obj.number|add:'-3' and num < page_obj.number|add:'3' %}
+                                    <li class="page-item">
+                                        <a class="page-link text-success" href="?page={{ num }}{% if query_string %}&{{ query_string }}{% endif %}">{{ num }}</a>
+                                    </li>
+                                {% endif %}
+                            {% endfor %}
+
+                            {% if page_obj.has_next %}
+                                <li class="page-item">
+                                    <a class="page-link text-success" href="?page={{ page_obj.next_page_number }}{% if query_string %}&{{ query_string }}{% endif %}">
+                                        Próxima <i class="fa-solid fa-chevron-right ms-1"></i>
+                                    </a>
+                                </li>
+                            {% else %}
+                                <li class="page-item disabled"><span class="page-link">Próxima</span></li>
+                            {% endif %}
+                        </ul>
+                    </nav>
+                {% endif %}
+
+            </div>
+        </div>
+    </div>
+</section>
+
+{% endblock %}
+
